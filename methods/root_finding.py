@@ -122,7 +122,7 @@ class Newton_Raphson(Base_Method):
 
     def set_parameters(self, point, tolerance, function, derivative):
         '''
-        Initializer of Bisection class where is given the next arguments:
+        Initializer of Newton_Raphson class where is given the next arguments:
 
         - point: they are the initial point where the function is defined
 
@@ -130,9 +130,9 @@ class Newton_Raphson(Base_Method):
           if there are more tolerance then you root would be most nearest
           to the real number.
 
-        - function: amm your function, ¿not?
+        - function: amm your function f(x)
         
-        - derivative: the derivative of your function.
+        - derivative: the derivative of your function. :)
         '''
         
         assert isinstance(point, (float, int)), 'Check data type of the point'
