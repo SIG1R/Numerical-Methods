@@ -1,14 +1,39 @@
 # Root search
 # Equations
+import polars as pl
+import numpy as np
+from errors import errors
 
 class Base_Method:
     
     def __init__(self):
         self.steps = 0
         self.root = 0
+        self.summary = {
+            'Iter': [],
+            'Root': [],
+            'Error ABS': [],
+            'Error Relative':  []
+            }
 
+    def add_summary(self, iter_, root, errorabs, errorre):
 
-# ----- By equations ------
+        self.summary['Iter'].append(iter_)
+        self.summary['Root'].append(root)
+        self.summary['Error ABS'].append(errorabs)
+        self.summary['Error Relative'].append(errorre)
+            
+
+    def make_summary(self):
+        self.summary = pl.DataFrame(data = self.summary,
+                                    schema = {
+                                        'Iter': pl.Int64,
+                                        'Root': pl.Float64,
+                                        'Error ABS': pl.Float64,
+                                        'Error Relative': pl.Float64,
+                                    })
+                                    
+
 
 class Bisection(Base_Method):
     '''
@@ -186,14 +211,22 @@ class Fixed_Point(Base_Method):
         
         '''
         
-        aprox_ = [999999999999, self.point] # Copy initial point for not mutate it
+        aprox_ = [np.inf, self.point] # Copy initial point for not mutate it
+        error = errors.absolute(aprox_[-2], aprox_[-1]) # initial error abs
 
-        while abs(aprox_[-1] - aprox_[-2]) > self.tolerance:
-            print(f'value\t{aprox_[-1]}\terror\t{abs(aprox_[-1] - aprox_[-2])}')
+        while error > self.tolerance:
+
+            self.add_summary(self.steps, self.root, error, errors.relative(aprox_[-2], aprox_[-1])
+)
+
+
             value_x = self.function(aprox_[-1])
             aprox_.append(value_x)
 
+            error = errors.absolute(aprox_[-2], aprox_[-1])
             self.steps += 1
 
-        self.root = aprox_[-1]
+            self.root = aprox_[-1]
+
+        self.make_summary()
 
