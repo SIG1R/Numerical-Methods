@@ -104,7 +104,7 @@ class Bisection(Base_Method):
                              errors.relative(self.interval[1], self.interval[0])
                              )
 
-        self.make_summary()
+        self.make_summary() 
 
 class Secant(Base_Method):
     '''
