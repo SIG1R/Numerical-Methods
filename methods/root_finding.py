@@ -77,17 +77,34 @@ class Bisection(Base_Method):
         return abs(self.interval[1]-self.interval[0]) < self.tolerance
 
     def fit(self):
-        c = (self.interval[0] + self.interval[1])/2
-        fa = self.function(self.interval[0])
-        fc = self.function(c)
-    
-        if self.function(c) == 0 or self.check_interval():
-            return f'El valor raíz es {c}'
-        elif fa*fc > 0:
-            return self.fit(c, self.interval[1], self.function, self.tolerance)
-        else: 
-            return self.fit(self.interval[0], c, self.function, self.tolerance)
+        '''
+        '''
 
+        while errors.absolute(self.interval[1], self.interval[0]) > self.tolerance:
+            
+            middle_value = (self.interval[0] + self.interval[1])/2 # Compute the middle value
+            f_middle_value = self.function(middle_value)
+            
+            # If middle value is equal to 0, the work is donde!
+            if (f_middle_value == 0):
+                self.root = middle_value # Setting as root value
+
+            elif self.function(self.interval[0]) * f_middle_value > 0:
+                self.interval[0] = middle_value
+                
+            else: 
+                self.interval[1] = middle_value
+
+            self.steps += 1
+
+            # Adding to history as a new row
+            self.add_summary(self.steps,
+                             middle_value,
+                             errors.absolute(self.interval[1], self.interval[0]),
+                             errors.relative(self.interval[1], self.interval[0])
+                             )
+
+        self.make_summary()
 
 class Secant(Base_Method):
     '''
@@ -173,14 +190,26 @@ class Newton_Raphson(Base_Method):
         
         '''
         
-        aprox_ = [999999999999, self.point] # Copy initial point for not mutate it
+        aprox_ = [9999999999999, self.point] # Copy initial point for not mutate it
+        error = errors.absolute(aprox_[-2], aprox_[-1])
 
-        while abs(aprox_[-1] - aprox_[-2]) > self.tolerance:
+        while error > self.tolerance:
+            
+            # Adding to history as a new row
+            self.add_summary(self.steps,
+                             self.root,
+                             error,
+                             errors.relative(aprox_[-2], aprox_[-1])
+                             )
+
+
             frac = self.function(aprox_[-2])/self.derivative(aprox_[-2])
             aprox_.append(aprox_[-2] - frac)
             self.steps += 1
 
-        self.root = aprox_[-1]
+            error = errors.absolute(aprox_[-2], aprox_[-1])
+
+            self.root = aprox_[-1] # Set last point as root
 
 
 class Fixed_Point(Base_Method):
@@ -216,8 +245,12 @@ class Fixed_Point(Base_Method):
 
         while error > self.tolerance:
 
-            self.add_summary(self.steps, self.root, error, errors.relative(aprox_[-2], aprox_[-1])
-)
+            # Adding to history as a new row
+            self.add_summary(self.steps,
+                             self.root,
+                             error,
+                             errors.relative(aprox_[-2], aprox_[-1])
+                            )
 
 
             value_x = self.function(aprox_[-1])
