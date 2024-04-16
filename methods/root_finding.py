@@ -210,7 +210,8 @@ class Newton_Raphson(Base_Method):
             error = errors.absolute(aprox_[-2], aprox_[-1])
 
             self.root = aprox_[-1] # Set last point as root
-
+            
+        self.make_summary()
 
 class Fixed_Point(Base_Method):
  
