@@ -103,7 +103,7 @@ class Bisection(Base_Method):
                              errors.absolute(self.interval[1], self.interval[0]),
                              errors.relative(self.interval[1], self.interval[0])
                              )
-
+        self.root = middle_value
         self.make_summary() 
 
 class Secant(Base_Method):
