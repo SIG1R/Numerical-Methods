@@ -131,33 +131,47 @@ class Secant(Base_Method):
 
 
     def fit(self):
+        '''
+        '''
+
+        # Setting the initial error
+        error = 999999999
         
+        # Computting initial points valued in self.function
         function_eval_p0 = self.function(self.points[0])
         function_eval_p1 = self.function(self.points[1])
 
-        # >>> Iterating until... <<<
-        while True:
+        # Iterating until the error had been lower to tolerance
+        while error > self.tolerance:
 
-            # ... until 
+            # In case of the denominator be equal to zero
             if function_eval_p0==function_eval_p1:
                 raise ZeroDivisionError('You can not divide by zero!')
 
-            iter_point = (self.points[0]*function_eval_p1-self.points[1]*function_eval_p0)/(function_eval_p1-function_eval_p0)
-            iter_function = self.function(iter_point)
-            
-            # ... until the tolerance had been exceeded
-            if abs(iter_function)<self.tolerance:
-                self.root = iter_point
-                print(f'Root found on coordinate x={self.root}')
-                break
-            
-            else:
-                self.points[0], self.points[1], function_eval_p0, function_eval_p1 = self.points[1], iter_point,function_eval_p1, iter_function
+            # Computing the fractional
+            numerator = self.points[0]*function_eval_p1 - self.points[1]*function_eval_p0
+            denominator = function_eval_p1 - function_eval_p0
 
+            new_point = numerator / denominator # Compute new point (x_{i+1})
+            new_point_evaluated = self.function(new_point)
+
+            # Updating points
+            self.points[0], self.points[1] = self.points[1], new_point
+            function_eval_p0, function_eval_p1 = function_eval_p1, new_point_evaluated
+
+            # Update references
             self.steps += 1
+            self.root = new_point
+            error = errors.absolute(self.points[0], self.points[1])
 
-        return self.steps
+            # Adding to history as a new row
+            self.add_summary(self.steps,
+                             new_point,
+                             error,
+                             errors.relative(self.points[0], self.points[1])
+                             )
 
+        self.make_summary()
 
 
 class Newton_Raphson(Base_Method):
