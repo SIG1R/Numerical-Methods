@@ -80,7 +80,10 @@ class Bisection(Base_Method):
         '''
         '''
 
-        while errors.absolute(self.interval[1], self.interval[0]) > self.tolerance:
+        middle_vals = [0]
+        error = self.tolerance + 10e-5
+
+        while error > self.tolerance:
             
             middle_value = (self.interval[0] + self.interval[1])/2 # Compute the middle value
             f_middle_value = self.function(middle_value)
@@ -96,13 +99,17 @@ class Bisection(Base_Method):
                 self.interval[1] = middle_value
 
             self.steps += 1
+            
+            middle_vals.append(middle_value)
+            error = errors.absolute(middle_vals[-2], middle_vals[-1])
 
             # Adding to history as a new row
             self.add_summary(self.steps,
                              middle_value,
-                             errors.absolute(self.interval[1], self.interval[0]),
-                             errors.relative(self.interval[1], self.interval[0])
+                             error,
+                             errors.relative(middle_vals[-2], middle_vals[-1])
                              )
+
         self.root = middle_value
         self.make_summary() 
 
@@ -135,7 +142,7 @@ class Secant(Base_Method):
         '''
 
         # Setting the initial error
-        error = 999999999
+        error = self.tolerance + 10e-5
         
         # Computting initial points valued in self.function
         function_eval_p0 = self.function(self.points[0])
@@ -204,7 +211,7 @@ class Newton_Raphson(Base_Method):
         
         '''
         
-        aprox_ = [9999999999999, self.point] # Copy initial point for not mutate it
+        aprox_ = [0, self.point] # Copy initial point for not mutate it
         error = errors.absolute(aprox_[-2], aprox_[-1])
 
         while error > self.tolerance:
@@ -255,7 +262,7 @@ class Fixed_Point(Base_Method):
         
         '''
         
-        aprox_ = [np.inf, self.point] # Copy initial point for not mutate it
+        aprox_ = [0, self.point] # Copy initial point for not mutate it
         error = errors.absolute(aprox_[-2], aprox_[-1]) # initial error abs
 
         while error > self.tolerance:
