@@ -16,7 +16,5 @@ def relative(approximate, real):
 
     error = absolute(approximate, real) / abs(real) *100
 
-    print(f'Numerador -> {absolute(approximate, real)}\t denominador -> {abs(real)}')
-
     return round(error, 3)
 
