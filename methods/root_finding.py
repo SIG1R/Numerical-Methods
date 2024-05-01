@@ -5,7 +5,7 @@ import numpy as np
 from errors import errors
 
 class Base_Method:
-    
+   
     def __init__(self):
         self.steps = 0
         self.root = 0
