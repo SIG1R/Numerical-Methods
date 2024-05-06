@@ -2,7 +2,13 @@ import sympy as sp
 
 
 class Lagrange:
-    def compute(coordinates: list):
+    
+    def __init__(self, incognite:str):
+
+        self.summation = 0
+        self.incognite = sp.Symbol(incognite)
+
+    def compute(self, coordinates: list):
         '''
         Compute the Lagrange polynomial and returns the value of the fuction
         evaluated in eval_point.
@@ -19,8 +25,6 @@ class Lagrange:
         '''
 
 
-        summation = 0 # Initial term of the summatory
-        x = sp.Symbol('x')
 
         for i in range(len(coordinates)): # 
 
@@ -28,13 +32,29 @@ class Lagrange:
             
             for j in range(len(coordinates)):
                 if i!=j:
-                    productory *= (x-coordinates[j][0])/(coordinates[i][0]-coordinates[j][0])
+                    productory *= (self.incognite-coordinates[j][0])/(coordinates[i][0]-coordinates[j][0])
 
-            summation += productory*coordinates[i][1] # Adding term i to the summation
+            self.summation += productory*coordinates[i][1] # Adding term i to the self.summation
         
-        summation = summation.expand()
+        self.summation = self.summation.expand()
 
-        return summation
+        return self.summation
+    
+    def eval(self, eval_points):
+        '''
+        Compute the Lagrange polynomial and returns the value of the fuction
+        evaluated in eval_point.
+
+        Arguments:
+        - eval_point: is the point(s) of eval in the equation of Lagrange
+                    polynomial, this can be a point (float) or a
+                    array of points to eval, correspond to axis X
+                    in the plane R².
+        '''
+        
+        return self.summation.subs(self.incognite, ecal_ponits)
+
+        
 
 class Newton:
     
