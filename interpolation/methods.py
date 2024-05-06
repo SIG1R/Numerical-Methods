@@ -28,7 +28,7 @@ class Lagrange:
                 if i!=j:
                     productory *= (eval_point-coordinates[j][0])/(coordinates[i][0]-coordinates[j][0])
 
-            summation += p*coordinates[i][1] # Adding term i to the summation
+            summation += productory*coordinates[i][1] # Adding term i to the summation
         
         return summation
 
