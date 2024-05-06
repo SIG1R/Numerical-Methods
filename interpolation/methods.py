@@ -32,6 +32,8 @@ class Lagrange:
 
             summation += productory*coordinates[i][1] # Adding term i to the summation
         
+        summation = summation.expand()
+
         return summation
 
 class Newton:
