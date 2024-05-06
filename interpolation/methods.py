@@ -1,6 +1,8 @@
+import sympy as sp
+
 
 class Lagrange:
-    def compute(coordinates: list, eval_point):
+    def compute(coordinates: list):
         '''
         Compute the Lagrange polynomial and returns the value of the fuction
         evaluated in eval_point.
@@ -18,7 +20,7 @@ class Lagrange:
 
 
         summation = 0 # Initial term of the summatory
-
+        x = sp.Symbol('x')
 
         for i in range(len(coordinates)): # 
 
@@ -26,7 +28,7 @@ class Lagrange:
             
             for j in range(len(coordinates)):
                 if i!=j:
-                    productory *= (eval_point-coordinates[j][0])/(coordinates[i][0]-coordinates[j][0])
+                    productory *= (x-coordinates[j][0])/(coordinates[i][0]-coordinates[j][0])
 
             summation += productory*coordinates[i][1] # Adding term i to the summation
         
