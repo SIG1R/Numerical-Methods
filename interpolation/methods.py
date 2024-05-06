@@ -52,7 +52,7 @@ class Lagrange:
                     in the plane R².
         '''
         
-        return self.summation.subs(self.incognite, ecal_ponits)
+        return self.summation.subs(self.incognite, eval_ponits)
 
         
 
